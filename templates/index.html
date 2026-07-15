@@ -1,1 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill & Warranty Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="antialiased">
+    <div class="container py-8">
+        <h1 class="text-4xl font-bold text-gray-100 text-center mb-8">Bill & Warranty Tracker</h1>
+
+        <!-- User Status / Auth Forms -->
+        <div id="authSection" class="card mb-6 text-center">
+            <div id="loggedInView" class="hidden">
+                <p class="text-xl text-gray-200 mb-4">Welcome, <span id="loggedInUsername" class="font-semibold text-indigo-300"></span>!</p>
+                <button onclick="logout()" class="btn btn-secondary">Logout</button>
+            </div>
+            <div id="loggedOutView">
+                <h2 class="text-2xl font-semibold text-gray-100 mb-4">Login / Register</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Login Form -->
+                    <div class="p-4 rounded-lg border border-gray-700 bg-gray-800">
+                        <h3 class="text-xl font-medium text-gray-100 mb-3">Login</h3>
+                        <input type="text" id="loginUsername" class="input-field mb-3" placeholder="Username">
+                        <input type="password" id="loginPassword" class="input-field mb-4" placeholder="Password">
+                        <button onclick="login()" class="btn btn-primary w-full">Login</button>
+                    </div>
+                    <!-- Register Form -->
+                    <div class="p-4 rounded-lg border border-gray-700 bg-gray-800">
+                        <h3 class="text-xl font-medium text-gray-100 mb-3">Register</h3>
+                        <input type="text" id="registerUsername" class="input-field mb-3" placeholder="Username">
+                        <input type="email" id="registerEmail" class="input-field mb-3" placeholder="Email">
+                        <input type="password" id="registerPassword" class="input-field mb-4" placeholder="Password">
+                        <button onclick="register()" class="btn btn-primary w-full">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Area -->
+        <div id="notifications" class="mb-6"></div>
+
+        <!-- Main App Content (Hidden until logged in) -->
+        <div id="appContent" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Bill Tracking Section -->
+            <div class="card">
+                <h2 class="text-2xl font-semibold text-gray-100 mb-4">Bill Tracker</h2>
+
+                <!-- Set Target Amount -->
+                <div class="mb-6">
+                    <label for="targetAmount" class="block text-gray-300 text-sm font-medium mb-2">Set Target Spending Amount:</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="targetAmount" class="input-field flex-grow" placeholder="e.g., 5000" min="0">
+                        <button onclick="setTargetAmount()" class="btn btn-primary whitespace-nowrap">Set Target</button>
+                    </div>
+                    <p id="currentTarget" class="text-gray-400 text-sm mt-2">Current Target: ₹ 0.00</p>
+                </div>
+
+                <!-- Add Bill -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Add New Bill</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="billAmount" class="block text-gray-300 text-sm font-medium mb-2">Bill Amount:</label>
+                            <input type="number" id="billAmount" class="input-field" placeholder="e.g., 1500" min="0">
+                        </div>
+                        <div>
+                            <label for="billDate" class="block text-gray-300 text-sm font-medium mb-2">Bill Date:</label>
+                            <input type="date" id="billDate" class="input-field">
+                        </div>
+                    </div>
+                    <button onclick="addBill()" class="btn btn-primary w-full">Add Bill Manually</button>
+
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                        <label for="billPhoto" class="block text-gray-300 text-sm font-medium mb-2">Upload Bill Photo:</label>
+                        <input type="file" id="billPhoto" accept="image/*" class="input-field mb-2">
+                        <button onclick="uploadBillPhoto()" class="btn btn-secondary w-full flex items-center justify-center">
+                            Read Bill from Photo
+                            <svg id="loadingSpinner" class="animate-spin ml-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Check Spending -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Check Spending</h3>
+                    <label for="timeFrame" class="block text-gray-300 text-sm font-medium mb-2">Select Time Frame:</label>
+                    <select id="timeFrame" class="input-field mb-4">
+                        <option value="1">Last 1 Week</option>
+                        <option value="2">Last 2 Weeks</option>
+                        <option value="3">Last 3 Weeks</option>
+                    </select>
+                    <button onclick="checkSpending()" class="btn btn-primary w-full">Check Spending</button>
+                    <p id="totalSpending" class="text-gray-400 text-sm mt-2">Total spending in selected period: ₹ 0.00</p>
+                </div>
+
+                <!-- Bill List -->
+                <div>
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Your Bills</h3>
+                    <div id="billList" class="space-y-2">
+                        <!-- Bills will be dynamically added here -->
+                        <p class="text-gray-500" id="noBillsMessage">No bills added yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warranty Tracking Section -->
+            <div class="card">
+                <h2 class="text-2xl font-semibold text-gray-100 mb-4">Warranty Tracker</h2>
+
+                <!-- Add Warranty -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Add New Warranty</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="warrantyItem" class="block text-gray-300 text-sm font-medium mb-2">Item Name:</label>
+                            <input type="text" id="warrantyItem" class="input-field" placeholder="e.g., Laptop">
+                        </div>
+                        <div>
+                            <label for="warrantyEndDate" class="block text-gray-300 text-sm font-medium mb-2">Warranty End Date:</label>
+                            <input type="date" id="warrantyEndDate" class="input-field">
+                        </div>
+                    </div>
+                    <button onclick="addWarranty()" class="btn btn-primary w-full">Add Warranty</button>
+                </div>
+
+                <!-- Check Warranties -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Check Warranties</h3>
+                    <button onclick="checkWarranties()" class="btn btn-primary w-full">Check All Warranties</button>
+                </div>
+
+                <!-- Warranty List -->
+                <div>
+                    <h3 class="text-xl font-medium text-gray-100 mb-3">Your Warranties</h3>
+                    <div id="warrantyList" class="space-y-2">
+                        <!-- Warranties will be dynamically added here -->
+                        <p class="text-gray-500" id="noWarrantiesMessage">No warranties added yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Link to your custom JavaScript file -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
 
