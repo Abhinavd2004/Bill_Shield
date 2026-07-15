@@ -1,0 +1,121 @@
+/* Custom CSS for dark theme and smooth transitions */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #1a202c; /* Dark background */
+    color: #e2e8f0; /* Light text */
+    transition: background-color 0.3s ease-in-out;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+.card {
+    background-color: #2d3748; /* Slightly lighter dark for cards */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+.input-field {
+    padding: 0.75rem;
+    border: 1px solid #4a5568; /* Darker gray border */
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: #2d3748; /* Same as card background */
+    color: #e2e8f0; /* Light text */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-field:focus {
+    outline: none;
+    border-color: #667eea; /* Indigo-400 */
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.5); /* Focus ring */
+}
+.btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-primary {
+    background-color: #667eea; /* Indigo-500 */
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #5a67d8; /* Indigo-600 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-secondary {
+    background-color: #4a5568; /* Gray-700 */
+    color: #e2e8f0; /* Light text */
+}
+.btn-secondary:hover {
+    background-color: #2d3748; /* Gray-800 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.notification {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease-in-out;
+}
+.notification.success {
+    background-color: #2f855a; /* Darker green */
+    color: #e6fffa; /* Light green text */
+}
+.notification.warning {
+    background-color: #b7791f; /* Darker orange */
+    color: #fffaf0; /* Light orange text */
+}
+.notification.error {
+    background-color: #c53030; /* Darker red */
+    color: #fed7d7; /* Light red text */
+}
+.notification.info {
+    background-color: #3182ce; /* Darker blue */
+    color: #ebf8ff; /* Light blue text */
+}
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed #4a5568; /* Darker gray dashed line */
+    color: #e2e8f0;
+}
+.list-item:last-child {
+    border-bottom: none;
+}
+.delete-btn {
+    background: none;
+    border: none;
+    color: #fc8181; /* Light red */
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s, transform 0.2s;
+}
+.delete-btn:hover {
+    color: #e53e3e; /* Darker red */
+    transform: scale(1.1);
+}
+/* Specific styles for auth forms */
+#loggedOutView .input-field {
+    background-color: #2d3748; /* Match card background */
+    border-color: #4a5568;
+}
+#loggedOutView .btn {
+    margin-top: 0.5rem;
+}
